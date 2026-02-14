@@ -1,23 +1,46 @@
 package dev.rynwllngtn.agorasystem;
 
-import dev.rynwllngtn.agorasystem.model.Conta;
-import dev.rynwllngtn.agorasystem.model.Enums.Enums;
-import dev.rynwllngtn.agorasystem.model.Usuario;
+import dev.rynwllngtn.agorasystem.model.Account.CheckingAccount;
+import dev.rynwllngtn.agorasystem.model.Account.SavingAccount;
+import dev.rynwllngtn.agorasystem.model.User;
 
 public class Main {
     public static void main(String[] args) {
-        Usuario User = new Usuario(
-                "1112223334",
-                "Usuário 1",
+        User user1 = new User(
+                "User",
                 "20000101",
-                "user@domain.com",
+                "user1email@domain.com",
+                "0001112223",
                 "1234567890");
 
-        User.getStatus();
+        System.out.println(user1.toString());
 
-        Conta userCorrente = new Conta(User, Enums.ContaTipo.CORRENTE);
-        Conta userPoupanca = new Conta(User, Enums.ContaTipo.POUPANÇA);
-        userCorrente.getStatus();
-        userPoupanca.getStatus();
+        //Creating Bank accounts and making depositing in both
+        CheckingAccount user1checking = new CheckingAccount(user1);
+        SavingAccount user1saving = new SavingAccount(user1);
+        user1checking.makeDeposit(25000.0);
+        user1saving.makeDeposit(25000.0);
+
+        //Trying unique account type functions
+        user1checking.makeMonthlyPayment();
+        user1saving.applyMonthlyInterest();
+        System.out.println("\nChecking unique account type functions");
+        System.out.println(user1checking.toString());
+        System.out.println(user1saving.toString());
+
+        //Trying withdrawal beyond limits
+        user1checking.makeWithdrawal(20000.0);
+        user1saving.makeWithdrawal(5001.0);
+        System.out.println("\nChecking withdrawal beyond limits");
+        System.out.println(user1checking.toString());
+        System.out.println(user1saving.toString());
+
+        //Trying withdrawal within limits
+        user1checking.makeWithdrawal(19000.0);
+        user1saving.makeWithdrawal(4000.0);
+        System.out.println("\nChecking withdrawal within limits");
+        System.out.println(user1checking.toString());
+        System.out.println(user1saving.toString());
+
     }
 }
