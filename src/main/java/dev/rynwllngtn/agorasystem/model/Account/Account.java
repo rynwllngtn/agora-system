@@ -30,7 +30,7 @@ public abstract class Account {
 
     public void makeWithdrawal(double amount) {
         if(this.owner.isActive()) {
-            this.balance = (getBalance() + amount);
+            this.balance = (getBalance() - amount);
         }
     }
 }
