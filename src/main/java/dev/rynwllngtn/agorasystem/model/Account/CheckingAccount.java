@@ -11,7 +11,6 @@ public class CheckingAccount extends Account {
         super(owner);
     }
 
-
     public double getTransactionLimit() {
         return transactionLimit;
     }
@@ -28,11 +27,12 @@ public class CheckingAccount extends Account {
         this.balance -= 70.0;
     }
 
+    @Override
     public void makeWithdrawal(double amount) {
         double taxedAmount = amount + (amount * transactionTax);
         if(this.owner.isActive()) {
             if(this.balance >= taxedAmount && transactionLimit >= taxedAmount) {
-                this.balance = (getBalance() - taxedAmount);
+                super.makeWithdrawal(taxedAmount);
                 this.transactionLimit -= taxedAmount;
             }
         }

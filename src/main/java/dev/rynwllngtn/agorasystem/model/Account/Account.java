@@ -27,4 +27,10 @@ public abstract class Account {
             this.balance = (getBalance() + amount);
         }
     }
+
+    public void makeWithdrawal(double amount) {
+        if(this.owner.isActive()) {
+            this.balance = (getBalance() + amount);
+        }
+    }
 }

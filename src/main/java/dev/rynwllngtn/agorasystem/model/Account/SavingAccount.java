@@ -27,10 +27,11 @@ public class SavingAccount extends Account {
         this.balance += (getBalance() * interestRate);
     }
 
+    @Override
     public void makeWithdrawal(double amount) {
         if(this.owner.isActive()) {
             if(this.balance >= amount && transactionLimit >= amount) {
-                this.balance = (getBalance() - amount);
+                super.makeWithdrawal(amount);
                 this.transactionLimit -= amount;
             }
         }
