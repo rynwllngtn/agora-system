@@ -1,6 +1,10 @@
 package dev.rynwllngtn.agorasystem.model.Account;
 
 import dev.rynwllngtn.agorasystem.model.User;
+import dev.rynwllngtn.agorasystem.model.exception.DomainException;
+import dev.rynwllngtn.agorasystem.model.exception.InactiveAccountException;
+import dev.rynwllngtn.agorasystem.model.exception.InsufficientFundsException;
+import dev.rynwllngtn.agorasystem.model.exception.InsufficientTransactionLimitException;
 
 public class CheckingAccount extends Account {
     private double transactionLimit = 20000.0;
@@ -28,14 +32,19 @@ public class CheckingAccount extends Account {
     }
 
     @Override
-    public void makeWithdrawal(double amount) {
+    public void makeWithdrawal(double amount) throws DomainException {
         double taxedAmount = amount + (amount * transactionTax);
-        if(this.owner.isActive()) {
-            if(this.balance >= taxedAmount && transactionLimit >= taxedAmount) {
-                super.makeWithdrawal(taxedAmount);
-                this.transactionLimit -= taxedAmount;
-            }
+        if(!this.owner.isActive()) {
+            throw new InactiveAccountException("Withdrawal Erro: Inactive user!\n");
         }
+        if(this.balance < taxedAmount) {
+            throw new InsufficientFundsException("Withdrawal Erro: Insufficient funds to make this withdrawal!\n");
+        }
+        if(transactionLimit < taxedAmount) {
+            throw new InsufficientTransactionLimitException("Withdrawal Erro: Insufficient limit transaction to make this withdrawal!\n");
+        }
+        super.makeWithdrawal(taxedAmount);
+        this.transactionLimit -= taxedAmount;
     }
 
     @Override

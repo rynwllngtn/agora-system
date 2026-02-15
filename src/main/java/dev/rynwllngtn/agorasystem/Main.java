@@ -3,6 +3,8 @@ package dev.rynwllngtn.agorasystem;
 import dev.rynwllngtn.agorasystem.model.Account.CheckingAccount;
 import dev.rynwllngtn.agorasystem.model.Account.SavingAccount;
 import dev.rynwllngtn.agorasystem.model.User;
+import dev.rynwllngtn.agorasystem.model.exception.DomainException;
+import dev.rynwllngtn.agorasystem.model.exception.InsufficientFundsException;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,32 +17,58 @@ public class Main {
 
         System.out.println(user1.toString());
 
-        //Creating Bank accounts and making depositing in both
+        //Creating Bank accounts
         CheckingAccount user1checking = new CheckingAccount(user1);
         SavingAccount user1saving = new SavingAccount(user1);
-        user1checking.makeDeposit(25000.0);
-        user1saving.makeDeposit(25000.0);
 
-        //Trying unique account type functions
-        user1checking.makeMonthlyPayment();
-        user1saving.applyMonthlyInterest();
-        System.out.println("\nChecking unique account type functions");
-        System.out.println(user1checking.toString());
-        System.out.println(user1saving.toString());
+
+        //Trying withdrawal without funds
+        System.out.println("\nChecking withdrawal without funds");
+        try {
+            user1checking.makeWithdrawal(20000.0);
+        } catch (DomainException e) {
+            System.out.print(e.getMessage());
+        }
+
+        try {
+            user1saving.makeWithdrawal(5001.0);
+        } catch (DomainException e) {
+            System.out.print(e.getMessage());
+        }
+
 
         //Trying withdrawal beyond limits
-        user1checking.makeWithdrawal(20000.0);
-        user1saving.makeWithdrawal(5001.0);
+        user1checking.makeDeposit(25000.0);
+        user1saving.makeDeposit(25000.0);
         System.out.println("\nChecking withdrawal beyond limits");
-        System.out.println(user1checking.toString());
-        System.out.println(user1saving.toString());
+        try {
+            user1checking.makeWithdrawal(20000.0);
+        } catch (DomainException e) {
+            System.out.print(e.getMessage());
+        }
 
-        //Trying withdrawal within limits
-        user1checking.makeWithdrawal(19000.0);
-        user1saving.makeWithdrawal(4000.0);
-        System.out.println("\nChecking withdrawal within limits");
-        System.out.println(user1checking.toString());
-        System.out.println(user1saving.toString());
+        try {
+            user1saving.makeWithdrawal(5001.0);
+        } catch (DomainException e) {
+            System.out.print(e.getMessage());
+        }
+
+
+        //Trying withdrawal in deactivated account
+        user1.setActive(false);
+        System.out.println("\nChecking withdrawal in deactivated account");
+        try {
+            user1checking.makeWithdrawal(20000.0);
+        } catch (DomainException e) {
+            System.out.print(e.getMessage());
+        }
+
+        try {
+            user1saving.makeWithdrawal(5001.0);
+        } catch (DomainException e) {
+            System.out.print(e.getMessage());
+        }
+
 
     }
 }

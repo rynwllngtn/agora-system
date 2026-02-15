@@ -1,6 +1,7 @@
 package dev.rynwllngtn.agorasystem.model.Account;
 
 import dev.rynwllngtn.agorasystem.model.User;
+import dev.rynwllngtn.agorasystem.model.exception.DomainException;
 
 public abstract class Account {
     protected final User owner;
@@ -23,14 +24,10 @@ public abstract class Account {
     }
 
     public void makeDeposit(double amount) {
-        if(this.owner.isActive()) {
-            this.balance = (getBalance() + amount);
-        }
+        this.balance = (getBalance() + amount);
     }
 
-    public void makeWithdrawal(double amount) {
-        if(this.owner.isActive()) {
-            this.balance = (getBalance() - amount);
-        }
+    public void makeWithdrawal(double amount) throws DomainException {
+        this.balance = (getBalance() - amount);
     }
 }
